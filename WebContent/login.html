@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Login | Log in</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	href="bower_components/font-awesome/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet"
+	href="bower_components/Ionicons/css/ionicons.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+<!-- iCheck -->
+<link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<a href="#"><b>Login</b></a>
+		</div>
+		<!-- /.login-logo -->
+		<div class="login-box-body">
+			<p class="login-box-msg">Sign in to start your session</p>
+
+			<div id="locationid-1"></div>
+			<!-- /.social-auth-links -->
+
+		</div>
+		<!-- /.login-box-body -->
+	</div>
+	<!-- /.login-box -->
+
+	<!-- jQuery 3 -->
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<!-- Bootstrap 3.3.7 -->
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- iCheck -->
+	<script src="plugins/iCheck/icheck.min.js"></script>
+	<script src="dist/js/react/react.development.js"></script>
+	<script src="dist/js/react/react-dom.development.js"></script>
+	<script src="dist/js/react//babel.min.js"></script>
+
+	<script type="text/babel">
+class WebSite extends React.Component {
+    constructor(props) {
+        super(props);
+        //在state设置两个属性，以便后续通过state对象来对其进行修改
+        this.state = {user: '',passwd: ''};
+        //绑定挂载事件
+        this.handleChangeUser = this.handleChangeUser.bind(this);
+        this.handleChangePasswd = this.handleChangePasswd.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleChangeUser(event) {
+      this.setState({user: event.target.value});
+    }
+    handleChangePasswd(event){
+      this.setState({passwd: event.target.value});
+    }
+    handleSubmit(event) {
+        //接下来操作state时上下文对象发生改变，此处拿到操作句柄
+        var that = this;
+        var jsonObject = "{\"user\":\""+this.state.user+"\",\"passwd\":\""+this.state.passwd+"\",\"apid\":\"00002\"}";
+        //ajax请求
+        this.serverRequest = $.ajax({
+               type: "POST",
+               url: "login",
+               data: jsonObject,
+               dataType: "json",
+               contentType:'application/json;charset=utf-8',
+               headers:{'Authorization':''},
+               async: false,
+               success: function(data){
+                  that.setState({
+                    tokenstring: data[0].accesstoken,
+                  });
+                  if(data[0].accesstoken.length>0){
+                     window.open("http://2c2192g178.iask.in/api/index.html");
+                  }else{
+                     window.open("http://2c2192g178.iask.in/api/login.html");
+                  }
+               },
+	           error:function(XMLHttpRequest, textStatus, errorThrown){
+		           // 状态码
+	               console.log(XMLHttpRequest.status);
+	               // 状态
+	               console.log(XMLHttpRequest.readyState);
+	               // 错误信息   
+	               console.log(textStatus);
+	           }
+        })
+    }
+
+    //卸载React组件时，把多余请求关闭，以免影响其他框架或组件的操作
+    componentWillUnmount() {
+        this.serverRequest.abort();
+    }
+
+    render() {
+        return (
+               
+			<form onSubmit={this.handleSubmit}>
+				<div className="form-group has-feedback">
+					<input type="text" placeholder="Email" value={this.state.user} onChange={this.handleChangeUser} className="form-control" />
+				  <span className="glyphicon glyphicon-envelope form-control-feedback"></span>
+				</div>
+				<div className="form-group has-feedback">
+					<input type="password" placeholder="Password" value={this.state.passwd} onChange={this.handleChangePasswd} className="form-control"/>
+				  <span className="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<input type="submit" value="Submit" className="btn btn-primary btn-block btn-flat" />
+			</form>
+
+        );
+    }
+}
+
+ReactDOM.render(
+    <WebSite id="locationid-1" />,
+    document.getElementById('locationid-1')
+);
+
+</script>
+</body>
+</html>

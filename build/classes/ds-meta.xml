@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration     
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"     
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.api.db.UrlCodeBean" alias="UrlCodeBean" />
+		<typeAlias type="com.api.db.UserBean" alias="UserBean" />
+		<typeAlias type="com.api.db.UrlCodeParameter"
+			alias="UrlCodeParameter" />
+		<typeAlias type="com.api.db.UrlCodeMapper"
+			alias="UrlCodeMapper" />
+	</typeAliases>
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="jdbc" />
+			<dataSource type="POOLED">
+				<property name="driver" value="org.postgresql.Driver" />
+				<property name="url"
+					value="jdbc:postgresql://192.168.1.189:5432/app" />
+				<property name="username" value="test" />
+				<property name="password" value="test" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/api/db/UrlCodeMapper.xml" />
+	</mappers>
+</configuration> 
